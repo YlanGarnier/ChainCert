@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Home/Home.tsx'
+import CreateUser from './Create/CreateUser.tsx'
 import Profil from './Profil/Profil.tsx'
 
 const PlaceholderComponent = () => {
@@ -12,10 +12,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home />} />
           <Route path='/login' element={<PlaceholderComponent />} />
           <Route path='/user' element={<Profil />} />
           <Route path='/form' element={<PlaceholderComponent />} />
+          <Route path='/createUser' element={<CreateUser />} />
         </Routes>
       </BrowserRouter>
     </>

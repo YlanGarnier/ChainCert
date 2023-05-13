@@ -26,15 +26,21 @@ const ExperienceCard = ({experiences}: any) => {
   )
 }
 
-const InfoCard = () => {
+const InfoCard = ({isVerified}: any) => {
   return (
     <div className="infoCard">
+      <img src="../../public/tezos_baniere.png" className="topImage" />
       <p className="imageWrapper">
         <img src="../../public/Dupont_Moretti.jpg" className="profilPicture"/>
       </p>
-      <p className="fontMedium" >
-        John Doe
-      </p>
+      <div className="text-align-center">
+        <p className="fontMedium" >
+          John Doe
+        </p>
+        {isVerified && (
+          <img src="../../public/verified_badge.png" className="verifiedPicture"/>
+        )}
+      </div>
       <p className="fontSmall" >
         PDG de Microsoft
       </p>
@@ -52,11 +58,14 @@ const Separator = () => {
 const Profil = () => {
   const [qualifications, setQualifications] = useState<any[]>(["1", "2", "3"]);
   const [experiences, setExperiences] = useState<any[]>(["1", "2", "3"]);
+  const [isVerified, setVerified] = useState<boolean>(true);
 
   return (
     <div className="profil">
       <div className="profilBlock">
-        <InfoCard />
+        <InfoCard
+          isVerified={isVerified}
+        />
       </div>
       <div className="profilBlock">
         <h4>Qualifications:</h4>
