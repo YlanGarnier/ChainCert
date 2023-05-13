@@ -9,7 +9,7 @@ type document = {
   authorByUsername: big_map<string, address>,
 };
 
-type post = {
+type form = {
   id: int,
   document: document,
   name: string,
@@ -19,7 +19,7 @@ type post = {
 type storage = {
   userByUsername: big_map<string, address>,
   userByAddress: big_map<address, string>,
-  posts: big_map<address, list<post>>,
+  forms: big_map<address, list<form>>,
 };
 
 // POSTS
