@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@airgap/beacon-dapp": "^4.0.2",
+    "@taquito/beacon-wallet": "^16.1.2",
+    "@taquito/taquito": "^16.1.2",
     "@types/react-router-dom": "^5.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -26,6 +29,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "typescript": "^5.0.2",
-    "vite": "^4.3.2"
+    "vite": "^4.3.2",
+    "vite-plugin-node-polyfills": "^0.8.2"
   }
 }
