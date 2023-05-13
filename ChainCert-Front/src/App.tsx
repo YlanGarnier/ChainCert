@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './Home/Home.tsx'
+import Profil from './Profil/Profil.tsx'
 
 const PlaceholderComponent = () => {
   // Implement the component later
@@ -10,9 +12,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<PlaceholderComponent />} />
+          <Route path='/' element={<Home />} />
           <Route path='/login' element={<PlaceholderComponent />} />
-          <Route path='/user' element={<PlaceholderComponent />} />
+          <Route path='/user' element={<Profil />} />
           <Route path='/form' element={<PlaceholderComponent />} />
         </Routes>
       </BrowserRouter>
