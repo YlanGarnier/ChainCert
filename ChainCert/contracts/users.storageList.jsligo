@@ -1,0 +1,4 @@
+#include "users.jsligo"
+
+
+const store: storage = {userByUsername: Big_map.empty, userByAddress: Big_map.empty, posts: list([])}

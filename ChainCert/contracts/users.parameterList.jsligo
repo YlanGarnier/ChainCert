@@ -1,0 +1,3 @@
+#include "users.jsligo"
+
+const newUser: parameter = CreateUser("lenny")

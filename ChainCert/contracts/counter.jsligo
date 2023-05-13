@@ -1,4 +1,0 @@
-const main = ([param, oldStorage] : [string, string]) : [list<operation>, string] => {
-  let newStorage = oldStorage + "," + param;
-  return [list([]) as list<operation>, newStorage];
-}
