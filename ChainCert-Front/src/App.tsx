@@ -63,7 +63,7 @@ function App() {
           <Route path='/register' element={<Register setStorage={setStorage} contract={contract} setContract={setContract} setUserAddress={setUserAddress} contractAddress={contractAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
           <Route path='/' element={<Home />} />
           <Route path='/user' element={<PlaceholderComponent />} />
-          <Route path='/form' element={<Form />} />
+          <Route path='/form' element={<Form storage={storage} userAddress={userAddress} contract={contract} contractAddress={contractAddress} />} />
         </Routes>
       </BrowserRouter>
     </>

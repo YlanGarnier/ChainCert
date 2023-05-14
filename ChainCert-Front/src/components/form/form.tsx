@@ -21,7 +21,7 @@ const FormInputLabel = ({name, text, state, setState}
   )
 }
 
-const Form = (): JSX.Element => {
+const Form = ({storage, userAddress, contract, contractAddress}: {storage: any, userAddress: string | null, contract: any, contractAddress: string}): JSX.Element => {
   const [documentSelect, setDocumentSelect] = useState<"Diploma" | "Work experience">('Diploma')
   const [publicKey, setPublicKey] = useState<string>('')
   const [firstName, setFirstName] = useState<string>('')
@@ -31,16 +31,19 @@ const Form = (): JSX.Element => {
   const [endYear, setEndYear] = useState<string>('') // also year of graduation
   const [job, setJob] = useState<"Job 1" | "Job 2" | "Job 3" | "...">('Job 1')
 
-  function handleSubmitDiploma() {
+  async function handleSubmitDiploma() {
     const output = `publicKey:${publicKey}\n`
     + `firstName:${firstName}\n`
     + `lastName:${lastName}\n`
     + `graduationYear:${endYear}\n`
     + `comment:${comment}\n`
 
-    console.log(output)
+    if (userAddress) {
+      const op = await contract.methods.createForm(`${firstName} ${lastName}`, userAddress, output, publicKey).send();
+      op.confirmation();
+    }
   }
-  function handleSubmitWorkExperience() {
+  async function handleSubmitWorkExperience() {
     const output = `publicKey:${publicKey}\n`
     + `firstName:${firstName}\n`
     + `lastName:${lastName}\n`
@@ -49,7 +52,10 @@ const Form = (): JSX.Element => {
     + `job:${job}\n`
     + `comment:${comment}\n`
 
-    console.log(output)
+    if (userAddress) {
+      const op = await contract.methods.createForm(`${firstName} ${lastName}`, userAddress, output, publicKey).send();
+      op.confirmation();
+    }
   }
 
   const DiplomaForm = (): JSX.Element => {
