@@ -5,6 +5,7 @@ import './loginForm.scss';
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
 import { TezosToolkit } from "@taquito/taquito";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     tezos: TezosToolkit,
@@ -20,6 +21,7 @@ type Props = {
 const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const connectWallet = async (): Promise<void> => {
     try {
@@ -33,8 +35,9 @@ const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPub
       // await setup(userAddress);
       setContract(await tezos.wallet.at(contractAddress));
       setBeaconConnection(true);
+      navigate('/');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
