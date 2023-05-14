@@ -1,27 +1,27 @@
+import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { TezosToolkit } from "@taquito/taquito";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 import templeLogo from "../../assets/login/templeWalletLogo.png";
 import OneLineText from "../../helpers/textResize/textResize";
 import './registerForm.scss';
-import { BeaconWallet } from "@taquito/beacon-wallet";
-import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
-import { TezosToolkit } from "@taquito/taquito";
-import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 
 type Props = {
-    tezos: TezosToolkit,
-    setBeaconConnection: Dispatch<SetStateAction<boolean>>,
-    setPublicToken: Dispatch<SetStateAction<string | null>>,
-    wallet: BeaconWallet | null
-    setWallet: Dispatch<SetStateAction<BeaconWallet | null>>,
-    setUserAddress: Dispatch<SetStateAction<string | null>>,
-    contractAddress: string,
-    setContract: Dispatch<SetStateAction<any>>,
-    contract: any,
-    setStorage: Dispatch<SetStateAction<any>>
+  tezos: TezosToolkit,
+  setBeaconConnection: Dispatch<SetStateAction<boolean>>,
+  setPublicToken: Dispatch<SetStateAction<string | null>>,
+  wallet: BeaconWallet | null
+  setWallet: Dispatch<SetStateAction<BeaconWallet | null>>,
+  setUserAddress: Dispatch<SetStateAction<string | null>>,
+  contractAddress: string,
+  setContract: Dispatch<SetStateAction<any>>,
+  contract: any,
+  setStorage: Dispatch<SetStateAction<any>>
 }
 
-const Register = ({tezos, setContract, setStorage, contract, contractAddress, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
+const Register = ({ tezos, setContract, setStorage, contract, contractAddress, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress }: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -95,25 +95,24 @@ const Register = ({tezos, setContract, setStorage, contract, contractAddress, se
 
   return (
     <div className='registerWrapper' ref={containerRef1}>
-      <OneLineText text="Register using temple wallet and choosing an username" containerRef={containerRef1} baseFontSize="2.5rem" />
+      <OneLineText text="Register using temple wallet and choosing an username" containerRef={containerRef1} baseFontSize="2rem" />
       {publicKey == null ?
         <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
           <img className="loginTempleLogo" src={templeLogo}></img>
           <OneLineText text="Connect your wallet" containerRef={containerRef2} baseFontSize="2rem" />
         </div>
-      : 
+        :
         <div>
           <span className="keyMessage">✅ Your wallet is connected, your public key: </span>
           <span className="publicKey keyMessage">{publicKey}</span>
         </div>
       }
       <div className="form">
-        <input placeholder="Write your username" onChange={(data) => setUsername(data.target.value)}/>
-        <div className='loginConnect' ref={containerRef2} onClick={onRegister} >
+        <input placeholder="Write your username" onChange={(data) => setUsername(data.target.value)} />
+        <div className='loginConnect' onClick={onRegister} >
           <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
         </div>
       </div>
-      {/* <button onClick={onRegister}>Register</button> */}
     </div >
   );
 }
