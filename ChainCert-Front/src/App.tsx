@@ -3,10 +3,8 @@ import { TezosToolkit } from '@taquito/taquito';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/loginForm/loginForm';
-import { useState } from 'react';
-import { TezosToolkit } from '@taquito/taquito';
-import { BeaconWallet } from '@taquito/beacon-wallet';
 import Form from './components/form/form';
+import Home from './pages/home/home';
 
 const PlaceholderComponent = () => {
   // Implement the component later
