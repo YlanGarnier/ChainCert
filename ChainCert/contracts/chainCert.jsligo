@@ -1,0 +1,167 @@
+
+type document = {
+  receiver: address,
+  name: string,
+  date: timestamp,
+  content: string,
+  author: address
+};
+
+type form = {
+  id: nat,
+  temporary: bool,
+  document: document,
+  date: timestamp,
+};
+
+type formTemporary = {
+  timeout: timestamp,
+  receiver: address
+};
+
+type contentForm = {
+  id:nat,
+  name: string,
+  content: string,
+};
+
+type parameter =
+| ["CreateUser", string]
+| ["CreateForm", form]
+| ["GetStorage"]
+| ["CreateFormTemporary", formTemporary]
+| ["FillFormTemporaryReceived", contentForm]
+
+type storage = {
+  userByUsername: big_map<string, address>,
+  userByAddress: big_map<address, string>,
+  formsIntemporary: big_map<address, list<form>>,
+  formsTemporary: big_map<address, list<form>>,
+  formsTemporaryReceived: big_map<address, list<form>>
+};
+
+// FORMS
+const create_form = (_formContent: form, _storage: storage) : storage => {
+  const owner = Tezos.get_sender();
+  const actualMap = Option.unopt(Big_map.find_opt(owner, _storage.formsIntemporary));
+  const newList = list([_formContent, ...actualMap])
+  const newForms = Big_map.update(owner, Some(newList), _storage.formsIntemporary);
+  return {
+    ..._storage,
+    formsIntemporary: newForms
+  };
+}
+
+const create_form_temporary = (timeout: timestamp, receiver: address,_storage: storage) : storage => {
+  if (Big_map.mem((receiver), _storage.userByAddress)) {
+    failwith("Receiver does not exist.");
+  }
+  const owner = Tezos.get_sender();
+  const newFormReceiver: form = {
+    id: List.length(Option.unopt(Big_map.find_opt(receiver, _storage.formsTemporaryReceived))) + (1 as nat),
+    temporary: true,
+    document: {
+      name: "",
+      receiver: receiver,
+      date: 0 as timestamp,
+      content: "",
+      author: owner
+    },
+    date: timeout
+  };
+  const newFormOwner: form = {
+    id: List.length(Option.unopt(Big_map.find_opt(owner, _storage.formsTemporary))) + (1 as nat),
+    temporary: true,
+    document: {
+      name: "",
+      receiver: receiver,
+      date: 0 as timestamp,
+      content: "",
+      author: owner
+    },
+    date: timeout
+  };
+  const actualMapOwner = Option.unopt(Big_map.find_opt(owner, _storage.formsTemporary));
+  const actualMapReceiver = Option.unopt(Big_map.find_opt(owner, _storage.formsTemporaryReceived));
+  const newListReceiver = list([newFormReceiver, ...actualMapReceiver]);
+  const newListOwner = list([newFormOwner, ...actualMapOwner]);
+  const newFormsTemporary = Big_map.update(owner, Some(newListOwner), _storage.formsTemporary);
+  const newFormsTemporaryReceived = Big_map.update(receiver, Some(newListReceiver), _storage.formsTemporary);
+  return {
+    ..._storage,
+    formsTemporary: newFormsTemporary,
+    formsTemporaryReceived: newFormsTemporaryReceived
+  }
+}
+
+const fill_form_temporary_received = (name: string, content: string, id: nat, _storage: storage) : storage => {
+  const owner = Tezos.get_sender();
+  const formReceivedToFill:form = Option.unopt(List.head_opt(List.filter_map((elem: form) => {
+    if (elem.id == id) {
+      const updatedForm = {
+        ...elem,
+        document: {
+          ...elem.document,
+          content: content,
+          name: name,
+          date: Tezos.get_now(),
+        }
+      }
+      return Some(updatedForm);
+    } else {
+      return None();
+    }
+  }, Option.unopt(Big_map.find_opt(owner, _storage.formsTemporaryReceived)))));
+  if (formReceivedToFill.date - Tezos.get_now() <= 0) {
+    failwith("This form is not valable anymore.");
+  }
+  const author: address = formReceivedToFill.document.author;
+  const newListFormsTemporaryReceived:list<form> = List.filter_map((elem: form) => {
+    if (elem.id != id) {
+      return Some(elem);
+    } else {
+      return None();
+    }
+  }, Option.unopt(Big_map.find_opt(owner, _storage.formsTemporaryReceived)));
+  const newMapFormsTemporaryReceived = Big_map.update(owner, Some(newListFormsTemporaryReceived), _storage.formsTemporaryReceived);
+  const newListFormsTemporary = List.filter_map((elem: form) => {
+    if (elem.document.receiver != owner) {
+      return Some(formReceivedToFill);
+    } else {
+      return Some(elem);
+    }
+  }, Option.unopt(Big_map.find_opt(author, _storage.formsTemporary)));
+  const newMapFormsTemporary = Big_map.update(author, Some(newListFormsTemporary), _storage.formsTemporary);
+  return {
+    ..._storage,
+    formsTemporary: newMapFormsTemporary,
+    formsTemporaryReceived: newMapFormsTemporaryReceived
+  }
+
+}
+
+// USER
+const create_user = (_username: string, _storage: storage) : storage => {
+  const owner = Tezos.get_sender();
+  if (Big_map.mem((owner), _storage.userByAddress)) {
+    failwith("Address is already taken.");
+  }
+  const newUserByAddress = Big_map.update(owner as address, Some(_username), _storage.userByAddress);
+  const newUserByUsername = Big_map.update(_username, Some(owner), _storage.userByUsername);
+  return {
+    ..._storage,
+    userByAddress: newUserByAddress,
+    userByUsername: newUserByUsername,
+  };
+};
+
+const main = ([action, storage]: [parameter, storage]) : [list<operation>, storage] => {
+    let newStorage = match(action, {
+        CreateUser: (username: string) => create_user(username, storage),
+        CreateForm: (form: form) => create_form(form, storage),
+        GetStorage: () => storage,
+        CreateFormTemporary: (formTemporary: formTemporary) => create_form_temporary(formTemporary.timeout, formTemporary.receiver, storage),
+        FillFormTemporaryReceived: (contentForm: contentForm) => fill_form_temporary_received(contentForm.name, contentForm.content, contentForm.id, storage)
+    });
+    return [list([]) as list<operation>, newStorage];
+};
