@@ -1,84 +1,149 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import templeLogo from "../../assets/login/templeWalletLogo.png";
-import OneLineText from "../../helpers/textResize/textResize";
-import './loginForm.scss';
-import { BeaconWallet } from "@taquito/beacon-wallet";
-import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
-import { TezosToolkit } from "@taquito/taquito";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import FormButton from './formButton.tsx'
+import './form.scss'
 
-type Props = {
-    tezos: TezosToolkit,
-    setBeaconConnection: Dispatch<SetStateAction<boolean>>,
-    setPublicToken: Dispatch<SetStateAction<string | null>>,
-    wallet: BeaconWallet | null
-    setWallet: Dispatch<SetStateAction<BeaconWallet | null>>,
-    setUserAddress: Dispatch<SetStateAction<string | null>>,
-    contractAddress: string,
-    setContract: Dispatch<SetStateAction<any>>,
+const FormInputLabel = ({name, text, state, setState}
+  : {name: string, text: string, state:any, setState: any}): JSX.Element => {
+  return (
+    <>
+      <label for={name} className="formLabel">
+        {text}
+      </label>
+      <input
+        onChange={(e) => {setState(e.currentTarget.value.toString())}}
+        placeholder={`Type ${text.toLowerCase()} here...`}
+        name={name}
+        id={name}
+        value={state && state}
+        type={name === "graduationYear" | name === "startYear" || name === "endYear" ? "date" : "text"}
+        className="formInput"
+      />
+    </>
+  )
 }
 
-const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
-  const containerRef1 = useRef<HTMLDivElement>(null);
-  const containerRef2 = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+const Form = ({storage, userAddress, contract, contractAddress}: {storage: any, userAddress: string | null, contract: any, contractAddress: string}): JSX.Element => {
+  const [documentSelect, setDocumentSelect] = useState<"Diploma" | "Work experience">('Diploma')
+  const [publicKey, setPublicKey] = useState<string>('')
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
+  const [comment, setComment] = useState<string>('')
+  const [startYear, setStartYear] = useState<Date>('')
+  const [endYear, setEndYear] = useState<string>('') // also year of graduation
+  const [job, setJob] = useState<"Job 1" | "Job 2" | "Job 3" | "...">('Job 1')
 
-  const connectWallet = async (): Promise<void> => {
-    try {
-      await wallet?.requestPermissions({
-        network: {
-          type: NetworkType.GHOSTNET,
-          rpcUrl: "https://ghostnet.ecadinfra.com"
-        }
-      });
-      // const userAddress = await wallet?.getPKH();
-      // await setup(userAddress);
-      setContract(await tezos.wallet.at(contractAddress));
-      setBeaconConnection(true);
-      navigate('/');
-    } catch (error) {
-      console.error(error);
+  async function handleSubmitDiploma() {
+    const output = `publicKey:${publicKey}\n`
+    + `firstName:${firstName}\n`
+    + `lastName:${lastName}\n`
+    + `graduationYear:${endYear}\n`
+    + `comment:${comment}\n`
+
+    if (userAddress) {
+      const op = await contract.methods.createForm(`${firstName} ${lastName}`, userAddress, output, publicKey).send();
+      op.confirmation();
+    }
+  }
+  async function handleSubmitWorkExperience() {
+    const output = `publicKey:${publicKey}\n`
+    + `firstName:${firstName}\n`
+    + `lastName:${lastName}\n`
+    + `startYear:${startYear}\n`
+    + `endYear:${endYear}\n`
+    + `job:${job}\n`
+    + `comment:${comment}\n`
+
+    if (userAddress) {
+      const op = await contract.methods.createForm(`${firstName} ${lastName}`, userAddress, output, publicKey).send();
+      op.confirmation();
     }
   }
 
-  useEffect(() => {
-    (async () => {
-      const wallet = new BeaconWallet({
-        name: "ChainCert",
-        preferredNetwork: NetworkType.GHOSTNET,
-        disableDefaultEvents: true,
-        eventHandlers: {
-          [BeaconEvent.PAIR_INIT]: {
-            handler: defaultEventCallbacks.PAIR_INIT
-          },
-          [BeaconEvent.PAIR_SUCCESS]: {
-            handler: data => setPublicToken(data.publicKey)
-          }
-        }
-      });
-      tezos.setWalletProvider(wallet);
-      setWallet(wallet);
-      // checks if wallet was connected before
-      const activeAccount = await wallet.client.getActiveAccount();
-      if (activeAccount) {
-        const userAddress = await wallet.getPKH();
-        setUserAddress(userAddress);
-        setContract(await tezos.wallet.at(contractAddress));
-        // await setup(userAddress);
-        setBeaconConnection(true);
-      }
-    })();
-  }, []);
+  const DiplomaForm = (): JSX.Element => {
+    return (<FormInputLabel name="graduationYear" text="Graduation year" state={endYear} setState={setEndYear}/>)
+  }
+
+  const WorkExperienceForm = (): JSX.Element => {
+    return (
+      <>
+        <FormInputLabel name="startYear" text="Start year" state={startYear} setState={setStartYear}/>
+        <FormInputLabel name="endYear" text="End year" state={endYear} setState={setEndYear}/>
+        <label for="selectJob" className="formLabel">
+          Select a job
+        </label>
+        <select
+          required
+          id="selectJob"
+          name="selectJob"
+          className="formDocumentSelect"
+          value={job}
+          onChange={(e) => {setJob(e.currentTarget.value)}}
+        >
+          <option>
+            Job 1
+          </option>
+          <option>
+            Job 2
+          </option>
+          <option>
+            Job 3
+          </option>
+          <option>
+            ...
+          </option>
+        </select>
+      </>
+    )
+  }
 
   return (
-    <div className='loginWrapper' ref={containerRef1}>
-      <OneLineText text="Connect using temple wallet" containerRef={containerRef1} baseFontSize="2.5rem" />
-      <img className="loginTempleLogo" src={templeLogo}></img>
-      <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
-        <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+    <div className="form">
+      <div className="formBlock">
+        <form>
+          <h1 className="formTitle">
+            Deliver a document
+          </h1>
+          <div className="separator"/>
+          <label for="publicKey" className="formLabel">
+            Select a document
+          </label>
+          <select
+            required
+            id="selectDocument"
+            name="selectDocument"
+            className="formDocumentSelect"
+            onChange={(e) => {setDocumentSelect(e.currentTarget.value)}}
+          >
+            <option>
+              Diploma
+            </option>
+            <option>
+              Work experience
+            </option>
+          </select>
+          <FormInputLabel name="publicKey" text="Public key" setState={setPublicKey}/>
+          <FormInputLabel name="firstName" text="First name" setState={setFirstName}/>
+          <FormInputLabel name="lastName" text="Last name" setState={setLastName}/>
+          {documentSelect == "Diploma" && <DiplomaForm />}
+          {documentSelect == "Work experience" && <WorkExperienceForm />}
+          <label for="name" className="formLabel">
+            Comment
+          </label>
+          <textarea
+            onChange={(e) => {setComment(e.currentTarget.value)}}
+            placeholder="Write a comment here..."
+            name="comment"
+            id="comment"
+            type="text"
+            className="formInput formComment"
+          />
+          <button className="formButton">
+            Envoyer
+          </button>
+        </form>
       </div>
-    </div >
-  );
+    </div>
+  )
 }
 
-export default Login;
+export default Form;
