@@ -3,7 +3,10 @@ import { TezosToolkit } from '@taquito/taquito';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/loginForm/loginForm';
-import Home from './pages/home/home';
+import { useState } from 'react';
+import { TezosToolkit } from '@taquito/taquito';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import Form from './components/form/form';
 
 const PlaceholderComponent = () => {
   // Implement the component later
@@ -24,7 +27,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login setUserAddress={setUserAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
           <Route path='/user' element={<PlaceholderComponent />} />
-          <Route path='/form' element={<PlaceholderComponent />} />
+          <Route path='/form' element={<Form />} />
         </Routes>
       </BrowserRouter>
     </>
