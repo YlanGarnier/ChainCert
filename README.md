@@ -2,10 +2,6 @@
 
 a decentralized platform on Tezos to certify diplomas and professional experience. This allows schools to deliver diplomas via our platform, companies to deliver an experience of one of their employees when they worked for them and individuals to access and use their experience and diploma history in order to have an immutable proof.
 
-## How does it work?
-
-[Explain how this project is working]
-
 ## Getting Started
 
 ### Installation
@@ -20,10 +16,6 @@ yarn i
 yarn dev
 ```
 Go to http://localhost:5173/
-
-### Usage
-
-[Explain how to use this project]
 
 ## Our team :heart:
 
