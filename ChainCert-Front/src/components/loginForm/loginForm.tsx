@@ -12,10 +12,12 @@ type Props = {
     setPublicToken: Dispatch<SetStateAction<string | null>>,
     wallet: BeaconWallet | null
     setWallet: Dispatch<SetStateAction<BeaconWallet | null>>,
-    setUserAddress: Dispatch<SetStateAction<string | null>>
+    setUserAddress: Dispatch<SetStateAction<string | null>>,
+    contractAddress: string,
+    setContract: Dispatch<SetStateAction<any>>,
 }
 
-const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
+const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
 
@@ -29,6 +31,7 @@ const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, s
       });
       // const userAddress = await wallet?.getPKH();
       // await setup(userAddress);
+      setContract(await tezos.wallet.at(contractAddress));
       setBeaconConnection(true);
     } catch (error) {
       console.log(error);
@@ -57,6 +60,7 @@ const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, s
       if (activeAccount) {
         const userAddress = await wallet.getPKH();
         setUserAddress(userAddress);
+        setContract(await tezos.wallet.at(contractAddress));
         // await setup(userAddress);
         setBeaconConnection(true);
       }

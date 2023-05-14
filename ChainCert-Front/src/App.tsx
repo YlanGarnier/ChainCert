@@ -16,14 +16,17 @@ function App() {
   const [wallet, setWallet] = useState<BeaconWallet | null>(null);
   const [beaconConnection, setBeaconConnection] = useState<boolean>(false);
   const [userAddress, setUserAddress] = useState<string | null>(null);
+  const [contract, setContract] = useState<any>(undefined);
+  const [storage, setStorage] = useState<any>(undefined);
 
+  const contractAddress: string = "KT1GMetr9DAf1n318DxVjdstL8xQpMkqvkGE";
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<PlaceholderComponent />} />
-          <Route path='/login' element={<Login setUserAddress={setUserAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
-          <Route path='/register' element={<Register setUserAddress={setUserAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
+          <Route path='/login' element={<Login contractAddress={contractAddress} setContract={setContract} setUserAddress={setUserAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
+          <Route path='/register' element={<Register setStorage={setStorage} contract={contract} setContract={setContract} setUserAddress={setUserAddress} contractAddress={contractAddress} wallet={wallet} setWallet={setWallet} setBeaconConnection={setBeaconConnection} setPublicToken={setPublicToken} tezos={tezos} />} />
           <Route path='/user' element={<PlaceholderComponent />} />
           <Route path='/form' element={<PlaceholderComponent />} />
         </Routes>

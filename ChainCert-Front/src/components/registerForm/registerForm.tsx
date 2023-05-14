@@ -5,6 +5,7 @@ import './registerForm.scss';
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
 import { TezosToolkit } from "@taquito/taquito";
+import swal from "sweetalert";
 
 type Props = {
     tezos: TezosToolkit,
@@ -12,10 +13,14 @@ type Props = {
     setPublicToken: Dispatch<SetStateAction<string | null>>,
     wallet: BeaconWallet | null
     setWallet: Dispatch<SetStateAction<BeaconWallet | null>>,
-    setUserAddress: Dispatch<SetStateAction<string | null>>
+    setUserAddress: Dispatch<SetStateAction<string | null>>,
+    contractAddress: string,
+    setContract: Dispatch<SetStateAction<any>>,
+    contract: any,
+    setStorage: Dispatch<SetStateAction<any>>
 }
 
-const Register = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
+const Register = ({tezos, setContract, setStorage, contract, contractAddress, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -31,10 +36,12 @@ const Register = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet
       });
       // const userAddress = await wallet?.getPKH();
       // await setup(userAddress);
+      setContract(await tezos.wallet.at(contractAddress));
       setPublicKey(await wallet?.getPKH());
       setBeaconConnection(true);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      swal(error.message);
     }
   }
 
@@ -61,14 +68,26 @@ const Register = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet
         const userAddress = await wallet.getPKH();
         setPublicKey(userAddress);
         setUserAddress(userAddress);
+        setContract(await tezos.wallet.at(contractAddress));
         // await setup(userAddress);
         setBeaconConnection(true);
       }
     })();
   }, []);
 
-  function onRegister() {
+  async function onRegister() {
     console.log(username);
+    if (contract) {
+      try {
+        const op = await contract.methods.createUser(username).send();
+        await op.confirmation();
+        const temp = await contract.storage();
+        setStorage(temp);
+      } catch (error: any) {
+        console.error("errorr " + error.message)
+        swal(error.message);
+      }
+    }
   }
 
   return (
