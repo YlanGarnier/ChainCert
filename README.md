@@ -1,6 +1,6 @@
 # ChainCert
 
-a decentralized platform on Tezos to certify diplomas and professional experience. This allows schools to deliver diplomas via our platform, companies to deliver an experience of one of their employees when they worked for them and individuals to access and use their experience and diploma history in order to have an immutable proof.
+A decentralized platform on Tezos to certify diplomas and professional experience. This allows schools to deliver diplomas via our platform, companies to deliver an experience of one of their employees when they worked for them and individuals to access and use their experience and diploma history in order to have an immutable proof.
 
 ## Getting Started
 
