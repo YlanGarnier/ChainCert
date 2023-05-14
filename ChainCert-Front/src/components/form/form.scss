@@ -14,12 +14,14 @@
     font-size: x-large;
   }
   .formInput {
+    font-family: 'Helvetica';
     display: block;
     border: solid 1px;
     height: 30px;
     border-radius: 5px;
     width: 100%;
     font-size: large;
+    margin-bottom: 10px;
   }
   .formButton {
     margin-top: 10px;
@@ -39,6 +41,11 @@
     color: black;
   }
   .formDocumentSelect {
-    
+    width: 100%;
+    font-size: large;
+    margin-bottom: 10px;;
+    border: solid 1px;
+    background-color: white;
+    border-radius: 5px;
   }
 }
