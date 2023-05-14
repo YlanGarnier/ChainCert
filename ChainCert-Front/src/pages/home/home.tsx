@@ -43,12 +43,12 @@ const Home = () => {
           <h3>Our platform leverages the Tezos blockchain to create a secure and decentralized ecosystem for managing credentials, such as diplomas and work experiences. With advanced encryption and privacy-preserving technologies, users can effortlessly share their achievements while maintaining control over their sensitive information.</h3>
         </div>
         <div className={`homeHeadline2 ${isText2Visible ? 'visible' : ''}`}>
-          <h1>Elevate Your Professional Profile with Secure, Blockchain-Verified Credentials</h1>
-          <h3>Our platform reimagines professional networking by creating a decentralized LinkedIn-like ecosystem on the Tezos blockchain. Users can create their profiles, showcasing their skills, experiences, and verified credentials while maintaining control over their sensitive information. Organizations can easily discover and connect with qualified professionals, confident in the authenticity of their achievements.</h3>
+          <h1>Unparalleled Security in Decentralized Credential Sharing and Verification</h1>
+          <h3>Our platform is designed with security at its core, utilizing the Tezos blockchain to ensure the highest level of data protection. Transactions containing sensitive information are encrypted using the recipient's public key, granting exclusive access only to the intended receiver. Simultaneously, transactions are signed with the sender's private key, enabling anyone to verify the sender's identity using their public key. This unique combination of encryption and digital signatures empowers users to share their credentials with confidence, knowing that their sensitive data remains private and that the authenticity of the sender is assured.</h3>
         </div>
         <div className={`homeHeadline3 ${isText3Visible ? 'visible' : ''}`}>
           <h1>Elevate Your Professional Profile with Secure, Blockchain-Verified Credentials</h1>
-          <h3>Our platform reimagines professional networking by creating a decentralized LinkedIn-like ecosystem on the Tezos blockchain. Users can create their profiles, showcasing their skills, experiences, and verified credentials while maintaining control over their sensitive information. Organizations can easily discover and connect with qualified professionals, confident in the authenticity of their achievements.</h3>
+          <h3>Our platform brings together professionals and organizations in a decentralized, secure, and trustworthy environment built on the Tezos blockchain. Users can create their profiles, highlighting their skills, experiences, and verified credentials, while maintaining control over their sensitive data. Organizations can effortlessly discover and connect with talented individuals, confident in the validity of their accomplishments. By promoting trust, transparency, and secure connections, our platform is transforming the way professionals and organizations collaborate and succeed in the digital world.</h3>
         </div>
         <div className="homeHeadlinePlaceHolder">
           <img className="homeHeadlineUpArrowIcon" src={upArrow}></img>
@@ -56,7 +56,18 @@ const Home = () => {
           <img className="homeHeadlineLearnMoreIcon" src={learnMoreIcon}></img>
         </div>
       </div>
-      <div className="homeFooterWrapper">footer incoming...</div>
+      <div className="homeFooterWrapper">
+        <h1>Haks 2023</h1>
+        <h2>ChainCert is a website created for the 2023 Haks event.</h2>
+        <h3>Created by</h3>
+        <div className="homeFooterCredits">
+          <p>Ylan Garnier</p>
+          <p>Lenny Vongphouthone</p>
+          <p>Tristan Masselot</p>
+          <p>Thibaut Degodenne</p>
+          <p>Tom Sancho</p>
+        </div>
+      </div>
     </div>
   );
 }
