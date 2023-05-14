@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import templeLogo from "../../assets/login/templeWalletLogo.png";
 import OneLineText from "../../helpers/textResize/textResize";
-import './loginForm.scss';
+import './registerForm.scss';
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
 import { TezosToolkit } from "@taquito/taquito";
@@ -15,9 +15,11 @@ type Props = {
     setUserAddress: Dispatch<SetStateAction<string | null>>
 }
 
-const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
+const Register = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
 
   const connectWallet = async (): Promise<void> => {
     try {
@@ -29,6 +31,7 @@ const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, s
       });
       // const userAddress = await wallet?.getPKH();
       // await setup(userAddress);
+      setPublicKey(await wallet?.getPKH());
       setBeaconConnection(true);
     } catch (error) {
       console.log(error);
@@ -56,6 +59,7 @@ const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, s
       const activeAccount = await wallet.client.getActiveAccount();
       if (activeAccount) {
         const userAddress = await wallet.getPKH();
+        setPublicKey(userAddress);
         setUserAddress(userAddress);
         // await setup(userAddress);
         setBeaconConnection(true);
@@ -63,15 +67,33 @@ const Login = ({tezos, setBeaconConnection, setPublicToken, wallet, setWallet, s
     })();
   }, []);
 
+  function onRegister() {
+    console.log(username);
+  }
+
   return (
-    <div className='loginWrapper' ref={containerRef1}>
-      <OneLineText text="Connect using temple wallet" containerRef={containerRef1} baseFontSize="2.5rem" />
-      <img className="loginTempleLogo" src={templeLogo}></img>
-      <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
-        <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+    <div className='registerWrapper' ref={containerRef1}>
+      <OneLineText text="Register using temple wallet and choosing an username" containerRef={containerRef1} baseFontSize="2.5rem" />
+      {publicKey == null ?
+        <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
+          <img className="loginTempleLogo" src={templeLogo}></img>
+          <OneLineText text="Connect your wallet" containerRef={containerRef2} baseFontSize="2rem" />
+        </div>
+      : 
+        <div>
+          <span className="keyMessage">✅ Your wallet is connected, your public key: </span>
+          <span className="publicKey keyMessage">{publicKey}</span>
+        </div>
+      }
+      <div className="form">
+        <input placeholder="Write your username" onChange={(data) => setUsername(data.target.value)}/>
+        <div className='loginConnect' ref={containerRef2} onClick={onRegister} >
+          <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+        </div>
       </div>
+      {/* <button onClick={onRegister}>Register</button> */}
     </div >
   );
 }
 
-export default Login;
+export default Register;
