@@ -1,0 +1,184 @@
+* {
+  margin: 0;
+}
+
+.profil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profilBlock {
+  width: 700px;
+  background-color: #15073fa0;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.formationCard {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 10px 0px 10px 0px;
+}
+
+.formationPicture {
+  width: 80px;
+  height: 80px;
+  margin-right: 20px;
+  border-radius: 2px;
+  // object-fit: contain;
+}
+
+.fontSmall {
+  font-size: 1.5ch;
+}
+
+.fontMedium {
+  font-size: 2ch;
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #ffffff;
+  margin: 2px 0px 2px 0px;
+  opacity: 0.3;
+}
+
+.imageWrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding: 2px;
+  margin-bottom: 10px
+}
+
+.profilPicture {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.topImage {
+  width: 100%;
+  height: 90px;
+  margin-bottom: 5px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.verifiedPicture {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  border-radius: 2px;
+  object-fit: contain;
+}
+
+.text-align-center {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.followButton {
+  position: relative;
+  width: 100px;
+  height: 25px;
+  border-radius: 4em;
+  background-color: #ffffff;
+  color: #15073f;
+  font-weight: bold;
+  font-size: 1.6ch;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+.followButton:hover {
+  transition-duration: 0.3s;
+  background-color: #179cf0;
+}
+
+.followButton:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 10px 10px white;
+}
+
+.followButton:active:after {
+  box-shadow: 0 0 0 0 white;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  opacity: 1;
+  transition: 0s;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.addButton {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  border-radius: 4em;
+  background-color: #ffffff;
+  color: #15073f;
+  font-weight: bold;
+  font-size: 1.6ch;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  margin-right: 10px;
+  font-size: 2ch;
+}
+
+.addButton:hover {
+  transition-duration: 0.3s;
+  background-color: #179cf0;
+}
+
+.addButton:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 5px 5px white;
+}
+
+.addButton:active:after {
+  box-shadow: 0 0 0 0 white;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  opacity: 1;
+  transition: 0s;
+}
