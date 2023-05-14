@@ -6,13 +6,17 @@
     flex-direction: column;
 
     .homePrimaryHeadline {
-        margin-top: 5rem;
+        margin-top: 6rem;
         font-style: italic;
-        font-size: 4rem;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 6rem;
+        background: linear-gradient(59deg, #f7a1ff 0%, #ffffff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .homeGifWrapper {
-        margin-top: 10rem;
+        margin-top: 12rem;
         display: flex;
         justify-content: space-evenly;
 
@@ -146,7 +150,20 @@
     }
 
     .homeFooterWrapper {
-        height: 20vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #3d2749;
+
+        .homeFooterCredits {
+            width: 80%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
     }
 }
 
