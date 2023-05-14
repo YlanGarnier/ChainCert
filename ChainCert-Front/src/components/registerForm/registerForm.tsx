@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import templeLogo from "../../assets/login/templeWalletLogo.png";
 import OneLineText from "../../helpers/textResize/textResize";
-import './loginForm.scss';
+import './registerForm.scss';
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
 import { TezosToolkit } from "@taquito/taquito";
+import swal from "sweetalert";
 
 type Props = {
     tezos: TezosToolkit,
@@ -15,11 +16,15 @@ type Props = {
     setUserAddress: Dispatch<SetStateAction<string | null>>,
     contractAddress: string,
     setContract: Dispatch<SetStateAction<any>>,
+    contract: any,
+    setStorage: Dispatch<SetStateAction<any>>
 }
 
-const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
+const Register = ({tezos, setContract, setStorage, contract, contractAddress, setBeaconConnection, setPublicToken, wallet, setWallet, setUserAddress}: Props) => {
   const containerRef1 = useRef<HTMLDivElement>(null);
   const containerRef2 = useRef<HTMLDivElement>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
 
   const connectWallet = async (): Promise<void> => {
     try {
@@ -32,9 +37,11 @@ const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPub
       // const userAddress = await wallet?.getPKH();
       // await setup(userAddress);
       setContract(await tezos.wallet.at(contractAddress));
+      setPublicKey(await wallet?.getPKH());
       setBeaconConnection(true);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      swal(error.message);
     }
   }
 
@@ -59,6 +66,7 @@ const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPub
       const activeAccount = await wallet.client.getActiveAccount();
       if (activeAccount) {
         const userAddress = await wallet.getPKH();
+        setPublicKey(userAddress);
         setUserAddress(userAddress);
         setContract(await tezos.wallet.at(contractAddress));
         // await setup(userAddress);
@@ -67,15 +75,44 @@ const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPub
     })();
   }, []);
 
+  async function onRegister() {
+    console.log(username);
+    if (contract) {
+      try {
+        const op = await contract.methods.createUser(username).send();
+        await op.confirmation();
+        const temp = await contract.storage();
+        setStorage(temp);
+      } catch (error: any) {
+        console.error("errorr " + error.message)
+        swal(error.message);
+      }
+    }
+  }
+
   return (
-    <div className='loginWrapper' ref={containerRef1}>
-      <OneLineText text="Connect using temple wallet" containerRef={containerRef1} baseFontSize="2.5rem" />
-      <img className="loginTempleLogo" src={templeLogo}></img>
-      <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
-        <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+    <div className='registerWrapper' ref={containerRef1}>
+      <OneLineText text="Register using temple wallet and choosing an username" containerRef={containerRef1} baseFontSize="2.5rem" />
+      {publicKey == null ?
+        <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
+          <img className="loginTempleLogo" src={templeLogo}></img>
+          <OneLineText text="Connect your wallet" containerRef={containerRef2} baseFontSize="2rem" />
+        </div>
+      : 
+        <div>
+          <span className="keyMessage">✅ Your wallet is connected, your public key: </span>
+          <span className="publicKey keyMessage">{publicKey}</span>
+        </div>
+      }
+      <div className="form">
+        <input placeholder="Write your username" onChange={(data) => setUsername(data.target.value)}/>
+        <div className='loginConnect' ref={containerRef2} onClick={onRegister} >
+          <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+        </div>
       </div>
+      {/* <button onClick={onRegister}>Register</button> */}
     </div >
   );
 }
 
-export default Login;
+export default Register;
