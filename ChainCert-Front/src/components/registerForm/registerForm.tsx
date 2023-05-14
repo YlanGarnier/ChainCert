@@ -6,6 +6,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 import { BeaconEvent, NetworkType, defaultEventCallbacks } from "@airgap/beacon-dapp";
 import { TezosToolkit } from "@taquito/taquito";
 import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     tezos: TezosToolkit,
@@ -25,6 +26,7 @@ const Register = ({tezos, setContract, setStorage, contract, contractAddress, se
   const containerRef2 = useRef<HTMLDivElement>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
+  const navigate = useNavigate();
 
   const connectWallet = async (): Promise<void> => {
     try {
@@ -83,6 +85,7 @@ const Register = ({tezos, setContract, setStorage, contract, contractAddress, se
         await op.confirmation();
         const temp = await contract.storage();
         setStorage(temp);
+        navigate('/login');
       } catch (error: any) {
         console.error("errorr " + error.message)
         swal(error.message);
