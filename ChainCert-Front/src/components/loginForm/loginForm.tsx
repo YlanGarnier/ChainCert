@@ -70,12 +70,19 @@ const Login = ({tezos, contractAddress, setContract, setBeaconConnection, setPub
     })();
   }, []);
 
+  function redirectRegisterAccount() {
+    navigate("/register");
+  }
+
   return (
     <div className='loginWrapper' ref={containerRef1}>
       <OneLineText text="Connect using temple wallet" containerRef={containerRef1} baseFontSize="2.5rem" />
       <img className="loginTempleLogo" src={templeLogo}></img>
       <div className='loginConnect' ref={containerRef2} onClick={connectWallet} >
-        <OneLineText text="Continue" containerRef={containerRef2} baseFontSize="2rem" />
+        <OneLineText text="Connect" containerRef={containerRef2} baseFontSize="2rem" />
+      </div>
+      <div className='loginConnect loginCreate' ref={containerRef2} onClick={redirectRegisterAccount} >
+        <OneLineText text="Create an account" containerRef={containerRef2} baseFontSize="2rem" />
       </div>
     </div >
   );
